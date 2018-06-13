@@ -1,7 +1,9 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-
+const translate = require('google-translate-api');
 const URL = `https://news.ycombinator.com/`;
+
+const lang = process.argv[2] || 'nl';
 
 const options = {
   uri: URL,
@@ -17,7 +19,14 @@ rp(options)
     $('.storylink').each( (i, element) => {
       // console.log(element);
       // re-cheerio the thing!
-      console.log( $(element).text() );
+      let theText = $(element).text();
+      translate(theText, {from: 'en', to: lang})
+        .then((res) => {
+          console.log(res.text);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
     });
   })
   .catch((err) => {
