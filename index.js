@@ -1,4 +1,4 @@
-const rp = require('request-promise');
+const makeRequest = require('request-promise');
 const cheerio = require('cheerio');
 const translate = require('google-translate-api');
 const URL = `https://news.ycombinator.com/`;
@@ -12,7 +12,7 @@ const options = {
   }
 };
 
-rp(options)
+makeRequest(options)
   .then(($) => {
     // the code will look very much
     // like jQuery code
