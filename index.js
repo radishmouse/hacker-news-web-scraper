@@ -37,9 +37,11 @@ const withCheerio = (theURL) => {
 const processComments = (theURL) => {
   makeRequest(withCheerio(theURL))
     .then(($) => {
+      // Use cheerio to grab the title of the story
+      let title = $('.storylink').text();
+
       // Use cheerio to find all the text from the comments
       // and put them in an array (using .map)
-      let title = $('.storylink').text();
       let allText = $('.comment span > *').map((i, e) => {
 
         // TODO: update the selector used above so that
@@ -54,16 +56,24 @@ const processComments = (theURL) => {
         }
       });
 
+      // We need to pass *both* the title
+      // and the comments text to the next
+      // link in the .then chain.
+      // So, we wrap it up in an object.
       return {
-        title,
+        title, // <-- this is the fancy shorthand
+               // for title: title
+        commentsText: allText.get().join(' ')
         // .get() needs to be used to grab
         // the actual array.
-        commentsText: allText.get().join(' ')
       }
-      // ^^ This is the value that is passed
-      // to the next link in the .then chain.
     })
     .then(({title, commentsText}) => {
+      // Use object destructuring to pull out
+      // the title and commentsText from the
+      // object that got passed in from the
+      // previous link in the .then chain.
+
       // Use object destructuring to pull out the
       // "vote" and "score" from the resulting
       // sentiment analysis.
